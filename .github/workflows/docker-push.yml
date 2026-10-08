@@ -13,6 +13,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check Docker Hub secret
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "Username: $DOCKERHUB_USERNAME"
+          echo "Username length: ${#DOCKERHUB_USERNAME}"
+          echo "Token length: ${#DOCKERHUB_TOKEN}"
+
+          case "$DOCKERHUB_TOKEN" in
+            dckr_pat_*)
+              echo "Token format: OK"
+              ;;
+            *)
+              echo "Token format: INVALID"
+              ;;
+          esac
+
       - name: Login to Docker Hub
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
